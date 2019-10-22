@@ -2,27 +2,22 @@
 
 from os import sys #To read stdin
 from matrix import matrix
+from make_info import make_info
 import copy
 
 def print_usage(): # -h
-    print("USAGE\n\t./302separation name1 name 2")
-    print("DESCRIPTION\n\ttry again")
+    print("USAGE\n\t./303make makefile [file]")
+    print("DESCRIPTION\n\tmakefile\tname of the makefile")
+    print("\tfile\tname of a recently modified file")
 
 def parser():
-    name1 = ""
-    name2 = ""
-    power = 1
-    state_name = False
     if (len(sys.argv) == 2 and sys.argv[1] == "-h"):
         print_usage()
         quit (0)
-    elif (len(sys.argv) == 3 and sys.argv[2].isnumeric()):
-        power = int(sys.argv[2])
-    elif (len(sys.argv) == 4):
-        name1 = sys.argv[2]
-        name2 = sys.argv[3]
-        state_name = True
-        power = 10
+    elif (len(sys.argv) == 2):
+        print("simple makefile")
+    elif (len(sys.argv) == 3):
+        print("second part")
     else :
         print_usage()
         quit (84) #exit
@@ -31,53 +26,26 @@ def parser():
             data = file.read().rstrip().split('\n')
     except:
         quit (84)
-    return data, name1, name2, power, state_name
+    return data
 
-def print_branch_name(name1, name2, data):
-    print("Degree of separation between", name1, "and", name2 + ": ", end='')
-    if ((not name1 in data.names) or (not name2 in data.names)):
-        print("-1")
-    elif (name1 == name2):
-        print("0")
-    else :
-        print(data.matrix[data.names.index(name1)][data.names.index(name2)])
+data = parser()
+save = data
+print (data)
 
-data, name1, name2, power, state_name = parser()
-data.sort()
-data = [element.split(' is friends with ') for element in data]
-copy_data = list(data)
+for element in data:
+    if 'cc ' in element:
+        data.remove(element)
+data = [i for i in data if i]
 
-names = []
-for element in copy_data:
-    if not element[0] in names:
-        names.append(element[0])
-    if not element[1] in names:
-        names.append(element[1])
+list_file = []
 
-names.sort()
-if (state_name == False):
-    [print(name) for name in names]
-    print()
+for i in range(0, len(data) - 1):
+    list_file.append(make_info(data[i], data[i]))
+print (data)
 
-tab = matrix(len(names), len(names), data, names)
-tab.fill_list()
-if (state_name == False):
-    tab.print_matrix()
-    print()
-i = 1
-j = 0
-cpy = copy.deepcopy(tab)
+print(list_file)
+quit(0)
 
-while i != power:
-    result = tab.multiply_matrix(cpy)
-    tab.replace(result, i + 1)
-    cpy = result
-    i += 1
-#Fill the diag with 0, as nobydy can befriend himself.
-while j != tab.size_x:
-    tab.matrix[j][j] = 0
-    j += 1
-if (state_name == False):
-    tab.print_matrix()
-else:
-    print_branch_name(name1, name2, tab)
+
+print (data)
+
