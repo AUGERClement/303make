@@ -2,7 +2,6 @@
 
 from os import sys #To read stdin
 from matrix import matrix
-from make_info import make_info
 import copy
 
 def print_usage(): # -h
@@ -30,22 +29,28 @@ def parser():
 
 data = parser()
 save = data
-print (data)
 
 for element in data:
     if 'cc ' in element:
         data.remove(element)
+
 data = [i for i in data if i]
+data = [w.replace(':', ' ') for w in data]
+data = [element.split() for element in data]
 
 list_file = []
 
-for i in range(0, len(data) - 1):
-    list_file.append(make_info(data[i], data[i]))
-print (data)
+for element in data:
+    for file in element:
+        if not(file in list_file):
+            list_file.append(file)
+list_file.sort()
 
-print(list_file)
+tab = matrix(len(list_file), len(list_file), None, list_file)
+
+for element in data:
+    for file in element[1:]:
+        tab.matrix[tab.names.index(file)][tab.names.index(element[0])] = 1
+tab.print_matrix()
+
 quit(0)
-
-
-print (data)
-
