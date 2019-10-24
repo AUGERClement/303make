@@ -29,7 +29,8 @@ def parser():
     return data, is_print_matrix
 
 data, is_print_matrix = parser()
-save = data
+save = copy.deepcopy(data)
+print(data)
 
 for element in data:
     if 'cc ' in element:
@@ -56,5 +57,7 @@ if not is_print_matrix:
     tab.print_matrix()
     print()
     tab.read_matrix()
+
+tab.create_compile_lines(save) #put the compile lines in self.compile_line
 
 quit(0)

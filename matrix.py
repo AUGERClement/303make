@@ -1,4 +1,5 @@
 #!/bin/python3
+import copy
 
 class matrix:
     def __init__(self, size_x = 13, size_y = 13, data = None, names = None):
@@ -8,6 +9,15 @@ class matrix:
         self.data = data
         self.names = names
         self.init_matrix()
+        self.compile_line = None
+
+    def create_compile_lines(self, data):
+        for element in data:
+            if ':' in element:
+                data.remove(element)
+        data = [i for i in data if i]
+        data.sort()
+        self.compile_line = copy.deepcopy(data)
 
     def init_matrix(self):
         i = 0
