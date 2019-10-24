@@ -10,13 +10,14 @@ def print_usage(): # -h
     print("\tfile\tname of a recently modified file")
 
 def parser():
+    is_print_matrix = 0
     if (len(sys.argv) == 2 and sys.argv[1] == "-h"):
         print_usage()
         quit (0)
     elif (len(sys.argv) == 2):
-        print("simple makefile")
+        is_print_matrix = 0
     elif (len(sys.argv) == 3):
-        print("second part")
+        is_print_matrix = 1
     else :
         print_usage()
         quit (84) #exit
@@ -25,9 +26,9 @@ def parser():
             data = file.read().rstrip().split('\n')
     except:
         quit (84)
-    return data
+    return data, is_print_matrix
 
-data = parser()
+data, is_print_matrix = parser()
 save = data
 
 for element in data:
@@ -51,8 +52,9 @@ tab = matrix(len(list_file), len(list_file), None, list_file)
 for element in data:
     for file in element[1:]:
         tab.matrix[tab.names.index(file)][tab.names.index(element[0])] = 1
-tab.print_matrix()
-print()
-tab.read_matrix()
+if not is_print_matrix:
+    tab.print_matrix()
+    print()
+    tab.read_matrix()
 
 quit(0)
