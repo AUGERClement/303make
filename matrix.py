@@ -50,8 +50,9 @@ class matrix:
     #Print formatted for Automatics tests.
     def print_matrix(self):
         for line in self.matrix:
+            print("[", end='')
             [print(elem, end=' ') for elem in line[:-1]]
-            print(line[-1]) #for newline
+            print(line[-1], "]", sep='') #for newline
 
 
     def replace(self, to_add, prox):
@@ -64,3 +65,19 @@ class matrix:
                 j = j + 1
             i = i + 1
             j = 0
+
+    def read_matrix(self):
+        for linedex, line in enumerate(self.matrix):
+            [self.recursif_dependance_reading(linedex, idx) for idx, dependance in enumerate(line) if dependance == 1]
+        return
+
+    #use recusif to print dependance reading. Use matrix and index.
+    def recursif_dependance_reading(self, linedex, idx):
+
+        print(self.names[linedex], "->", end=' ')
+        
+        for i, dep, in enumerate(self.matrix[idx]):
+            if (dep == 1):
+                self.recursif_dependance_reading(idx, i)
+        if (1 not in self.matrix[idx]):
+            print(self.names[idx])

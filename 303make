@@ -52,5 +52,7 @@ for element in data:
     for file in element[1:]:
         tab.matrix[tab.names.index(file)][tab.names.index(element[0])] = 1
 tab.print_matrix()
+print()
+tab.read_matrix()
 
 quit(0)
