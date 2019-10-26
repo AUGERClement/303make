@@ -16,7 +16,6 @@ class matrix:
             if ':' in element:
                 data.remove(element)
         data = [i for i in data if i]
-        data.sort()
         self.compile_line = copy.deepcopy(data)
 
     def init_matrix(self):
@@ -76,18 +75,63 @@ class matrix:
             i = i + 1
             j = 0
 
+    #read the matrix and create a list of dep_relations.
     def read_matrix(self):
+        dep_list = []
+        tmp_list = []
+
         for linedex, line in enumerate(self.matrix):
-            [self.recursif_dependance_reading(linedex, idx) for idx, dependance in enumerate(line) if dependance == 1]
-        return
+            for idx, dependance in enumerate(line):
+                if dependance == 1:
+                    tmp_list = self.recursif_dependance_reading(linedex, idx, [])
+                    dep_list.append(tmp_list)
+
+        #No list comprehension because it doesn't match well with 2d lists.
+        return dep_list
+
+    #print a list of dep_relations.
+    def print_dep(self, dep_list):
+        dep_list  = [elem for elem in dep_list if elem] #Remove empty dep
+
+        for dep in dep_list:
+            print(dep[0], end = '')
+            [print(' ->', elem, end='') for elem in dep[1:]]
+            print()
+
 
     #use recusif to print dependance reading. Use matrix and index.
-    def recursif_dependance_reading(self, linedex, idx):
+    def recursif_dependance_reading(self, linedex, idx, dep_elem):
 
-        print(self.names[linedex], "->", end=' ')
-        
+        dep_elem.append(self.names[linedex])
+
         for i, dep, in enumerate(self.matrix[idx]):
             if (dep == 1):
-                self.recursif_dependance_reading(idx, i)
+                self.recursif_dependance_reading(idx, i, dep_elem)
         if (1 not in self.matrix[idx]):
-            print(self.names[idx])
+            dep_elem.append(self.names[idx])
+        return(dep_elem)
+
+
+    #read lines used in compilation of elem and his results.
+    def read_compiled_lines(self, elem, mat_x_compilines, compilines_used):
+        if elem not in self.names:
+            quit(84)
+
+        results = []
+
+        for material, compiline in mat_x_compilines:
+            if (elem in material[1:]):
+                #print(compiline)
+                compilines_used.append(compiline)
+                results.append(material[0])
+
+        if results:
+            for result in results:
+                self.read_compiled_lines(result, mat_x_compilines, compilines_used)
+
+    def print_compilines_used(self, compilines_used):
+        removed_duplicata = list(dict.fromkeys(compilines_used))
+
+        removed_duplicata.sort()
+        for line in removed_duplicata:
+            print(line)

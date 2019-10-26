@@ -30,7 +30,8 @@ def parser():
 
 data, is_print_matrix = parser()
 save = copy.deepcopy(data)
-print(data)
+
+#Reparse lines to make tuples between elems and compilines.
 
 for element in data:
     if 'cc ' in element:
@@ -39,6 +40,7 @@ for element in data:
 data = [i for i in data if i]
 data = [w.replace(':', ' ') for w in data]
 data = [element.split() for element in data]
+#print(data)
 
 list_file = []
 
@@ -48,6 +50,7 @@ for element in data:
             list_file.append(file)
 list_file.sort()
 
+
 tab = matrix(len(list_file), len(list_file), None, list_file)
 
 for element in data:
@@ -56,8 +59,14 @@ for element in data:
 if not is_print_matrix:
     tab.print_matrix()
     print()
-    tab.read_matrix()
+    tab.print_dep(tab.read_matrix())
+    quit(0)
 
+#faire des tuples de materiaux x complilines
 tab.create_compile_lines(save) #put the compile lines in self.compile_line
 
+mat_x_compilines = list(zip(data, tab.compile_line))
+compilines_used = []
+tab.read_compiled_lines(sys.argv[2], mat_x_compilines, compilines_used)
+tab.print_compilines_used(compilines_used)
 quit(0)
